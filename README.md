@@ -2,41 +2,131 @@
 
 A .NET 8 project that integrates Claude AI for intelligent search capabilities, implemented with Clean Architecture and CQRS pattern.
 
-## Features
+## Project Overview
+This project creates a search system that combines traditional database searching with Claude AI's capabilities to provide intelligent, context-aware search results. It's built with .NET 8 and follows a clean architecture approach with CQRS pattern.
 
-- Clean Architecture with CQRS pattern
-- Integration with Claude AI API
-- SQL Server with Full-Text Search
-- Caching of search results
-- Rate limiting
-- Health checks
-- Structured logging with Serilog
-- Comprehensive error handling
-- Unit and Integration tests
-- Docker support
-- API authentication
+## Core Functionality
 
-## Prerequisites
+### 1. Search Process Flow
+When a user makes a search query:
+
+1. **Initial Database Search**
+   - The system first checks the local SQL Server database using full-text search
+   - Looks for previously cached search results matching the query
+
+2. **Claude AI Integration**
+   - If no relevant results are found in the database, the system calls the Claude AI API
+   - Claude AI analyzes the query and provides intelligent, contextual responses
+   - These responses are then stored in the database for future use
+
+3. **Result Caching**
+   - All search results (both from database and Claude AI) are cached
+   - Reduces API calls and improves response times for repeated queries
+
+### 2. Key Features
+
+#### Search Capabilities
+- Full-text search in SQL Server
+- Semantic search through Claude AI
+- Result ranking based on relevance
+- Support for complex queries
+- Contextual understanding of search terms
+
+#### Data Management
+- Automatic caching of search results
+- Database storage of historical searches
+- Full-text indexing for efficient queries
+- Automatic clean-up of old cached data
+
+#### API Security
+- API key authentication
+- Rate limiting to prevent abuse
+- Request validation
+- Secure error handling
+
+### 3. Use Cases
+
+The project is particularly useful for:
+
+1. **Enterprise Search Solutions**
+   - Internal knowledge base searching
+   - Document and content discovery
+   - Customer support systems
+
+2. **Content Management Systems**
+   - Smart content retrieval
+   - Related content suggestions
+   - Content categorization
+
+3. **Customer Service Applications**
+   - FAQ automation
+   - Support ticket classification
+   - Knowledge base integration
+
+### 4. Technical Implementation
+
+#### Architecture Layers
+1. **Domain Layer**
+   - Core business logic
+   - Entity definitions
+   - Business rules
+
+2. **Application Layer**
+   - Use case implementation
+   - CQRS commands and queries
+   - DTOs and mappings
+
+3. **Infrastructure Layer**
+   - Database access
+   - Claude AI integration
+   - External service connections
+
+4. **API Layer**
+   - REST endpoints
+   - Request/response handling
+   - Authentication/authorization
+
+### 5. Performance Features
+
+1. **Caching System**
+   - In-memory caching for frequent queries
+   - Configurable cache duration
+   - Cache invalidation strategies
+
+2. **Rate Limiting**
+   - Prevents API abuse
+   - Configurable limits per client
+   - Queue management for high-load scenarios
+
+3. **Database Optimization**
+   - Full-text search indexing
+   - Efficient query patterns
+   - Performance-optimized schema
+
+### 6. Monitoring and Maintenance
+
+1. **Health Checks**
+   - Database connectivity monitoring
+   - Claude AI API availability checks
+   - System resource monitoring
+
+2. **Logging**
+   - Structured logging with Serilog
+   - Query performance tracking
+   - Error tracking and reporting
+
+3. **Diagnostics**
+   - Performance metrics
+   - Usage statistics
+   - Error rate monitoring
+
+## Getting Started
+
+### Prerequisites
 
 - .NET 8 SDK
 - SQL Server (or Docker for containerized database)
 - Claude AI API key
-
-## Project Structure
-
-```
-ClaudeSearch/
-├── src/
-│   ├── ClaudeSearch.Domain/        # Entities, interfaces, domain logic
-│   ├── ClaudeSearch.Application/   # Use cases, CQRS handlers
-│   ├── ClaudeSearch.Infrastructure/# External services, data access
-│   └── ClaudeSearch.API/           # Web API, controllers
-└── tests/
-    ├── ClaudeSearch.UnitTests/
-    └── ClaudeSearch.IntegrationTests/
-```
-
-## Getting Started
 
 ### Local Development
 
@@ -103,6 +193,19 @@ Example Response:
 GET /health
 ```
 
+## Project Structure
+```
+ClaudeSearch/
+├── src/
+│   ├── ClaudeSearch.Domain/        # Entities, interfaces, domain logic
+│   ├── ClaudeSearch.Application/   # Use cases, CQRS handlers
+│   ├── ClaudeSearch.Infrastructure/# External services, data access
+│   └── ClaudeSearch.API/           # Web API, controllers
+└── tests/
+    ├── ClaudeSearch.UnitTests/
+    └── ClaudeSearch.IntegrationTests/
+```
+
 ## Rate Limiting
 
 The API implements rate limiting with the following default configuration:
@@ -126,46 +229,6 @@ Run integration tests:
 ```bash
 dotnet test tests/ClaudeSearch.IntegrationTests
 ```
-
-## Development Guides
-
-### Adding New Features
-
-1. Add domain entities in `ClaudeSearch.Domain`
-2. Create corresponding DTOs in `ClaudeSearch.Application`
-3. Implement CQRS handlers in `ClaudeSearch.Application`
-4. Add required infrastructure in `ClaudeSearch.Infrastructure`
-5. Create API endpoints in `ClaudeSearch.API`
-6. Add tests
-
-### Database Migrations
-
-Create a new migration:
-```bash
-dotnet ef migrations add MigrationName -p src/ClaudeSearch.Infrastructure -s src/ClaudeSearch.API
-```
-
-Apply migrations:
-```bash
-dotnet ef database update -p src/ClaudeSearch.Infrastructure -s src/ClaudeSearch.API
-```
-
-## Error Handling
-
-The application uses a global exception handling middleware that returns consistent error responses:
-
-```json
-{
-  "statusCode": 400,
-  "message": "Error message"
-}
-```
-
-## Logging
-
-Structured logging is implemented using Serilog. Logs are written to:
-- Console
-- Daily rolling file (logs/log-.txt)
 
 ## Contributing
 
